@@ -37,8 +37,8 @@ LAN_RANDOM_MAC=0
 WLAN_IF=wlan0
 WLAN_PH=iwn0
 WLAN_RANDOM_MAC=0
-WLAN_COUNTRY=US
-WLAN_REGDOMAIN=FCC
+WLAN_COUNTRY=PL
+WLAN_REGDOMAIN=NONE
 WWAN_IF=tun0
 WWAN_PROFILE=WWAN
 NAME=${0##*/}
@@ -319,6 +319,8 @@ __usage() {
   echo
   echo "EXAMPLES:"
   echo "  ${NAME} lan start"
+  echo "  ${NAME} lan start IP.IP.IP.IP/MASK"
+  echo "  ${NAME} lan start IP.IP.IP.IP/MASK GW.GW.GW.GW"
   echo "  ${NAME} lan restart"
   echo "  ${NAME} wlan scan"
   echo "  ${NAME} wlan start"
@@ -327,7 +329,11 @@ __usage() {
   echo "  ${NAME} wwan example"
   echo "  ${NAME} dns onic"
   echo "  ${NAME} dns udns"
+  echo "  ${NAME} dns nextdns"
+  echo "  ${NAME} dns cloudflare"
+  echo "  ${NAME} dns ibm"
   echo "  ${NAME} dns random"
+  echo "  ${NAME} dns IP.IP.IP.IP"
   echo "  ${NAME} doas"
   echo "  ${NAME} sudo"
   echo "  ${NAME} status"
@@ -468,6 +474,7 @@ __usage_dns() {
   echo
   cat << __EOF
 NOLOGGING DNS SERVERS:
+
   OpenNIC https://servers.opennicproject.org/
     87.98.175.85
     193.183.98.66
