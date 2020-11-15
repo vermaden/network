@@ -525,11 +525,6 @@ __EOF
 
 
 
-if [ "${UNBOUND}" != "1" ]
-then
-  echo __unbound_enabled_DNS_changes_disabled
-fi
-
 case ${1} in
 
   # LAN =======================================================================
