@@ -32,7 +32,7 @@
 # https://vermaden.wordpress.com
 
 # SETTINGS
-UNBOUND=1
+UNBOUND=0
 LAN_IF=em0
 LAN_RANDOM_MAC=0
 WLAN_IF=wlan0
@@ -527,7 +527,7 @@ __EOF
 
 if [ "${UNBOUND}" != "1" ]
 then
-  echo __unbound_enabled_DNS_changes_disabled
+  echo '__unbound_enabled_DNS_changes_disabled()'
 fi
 
 case ${1} in
