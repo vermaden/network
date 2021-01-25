@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# Copyright (c) 2020 Slawomir Wojciech Wojtczak (vermaden)
+# Copyright (c) 2017-2021 Slawomir Wojciech Wojtczak (vermaden)
 # All rights reserved.
 #
 # THIS SOFTWARE USES FREEBSD LICENSE (ALSO KNOWN AS 2-CLAUSE BSD LICENSE)
@@ -52,6 +52,23 @@ DOAS_WHICH=0
 DOAS=1
 ROOT=0
 IP_REGEX='[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
+
+# DISPLAY VERSION
+if [ "${1}" = "--version" -o \
+     "${1}" =  "-version" -o \
+     "${1}" =   "version" ]
+then
+
+  echo "           ___                 ___              ___  "
+  echo "   ____  __\  \__  __ __  __ __\_ \  __   _____/  /  "
+  echo "  /    \/  \_   _\\\  \  \/   \   \ \/ /  /  __/    \ "
+  echo "  \  \  \ '__\  \_ \  \  \ \  \  \    \__\__  \ /  / "
+  echo "   \__\__\__/ \___\______/____/\__\_/\_\_/____//__/  "
+  echo
+  echo "network.sh 0.7 2021/01/25"
+  echo
+  exit 0
+fi
 
 # CHECK doas(8) WITH which(1)
 if which doas 1> /dev/null 2> /dev/null
@@ -136,6 +153,11 @@ __wlan_wait_associated() {
 __net_shares_umount() {
   echo '__net_shares_umount()'
 
+  #DOAS# permit nopass :network as root cmd killall
+  #SUDO# %network ALL = NOPASSWD: /usr/bin/killall *
+  ${CMD} killall -9 sshfs &
+  echo ${CMD} killall -9 sshfs
+
   mount -t ${NETFS} -p \
     | awk '{print $2}' \
     | while read MNT
@@ -210,7 +232,7 @@ __network_status() {
 __network_reset() {
   echo '__network_reset()'
 
-  __net_shares_umount
+  __net_shares_umount &
 
   #DOAS# permit nopass :network as root cmd killall args -9 wpa_supplicant
   #SUDO# %network ALL = NOPASSWD: /usr/bin/killall -9 wpa_supplicant
