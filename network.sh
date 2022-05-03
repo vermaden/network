@@ -39,12 +39,12 @@ WLAN_IF=wlan0
 WLAN_PH=iwn0
 WLAN_RANDOM_MAC=0
 WLAN_COUNTRY=PL
-WLAN_REGDOMAIN=NONE
+WLAN_REGDOMAIN=FCC4
 WWAN_IF=tun0
 WWAN_PROFILE=WWAN
 NAME=${0##*/}
 NETFS="nfs,smbfs,fusefs.sshfs"
-TIMEOUT=16
+TIMEOUT=48
 DELAY=0.5
 SUDO_WHICH=0
 SUDO=0
@@ -516,8 +516,8 @@ NOLOGGING DNS SERVERS:
    89.233.43.71   (unicast)
 
   Swiss Privacy Foundation http://privacyfoundation.ch/de/service/server.html
-    77.109.138.45
-    77.109.139.29
+    185.95.218.42
+    185.95.218.43
 
   CCC http://www.ccc.de/censorship/dns-howto
     85.214.20.141
@@ -974,8 +974,8 @@ nameserver 87.98.175.85
 nameserver 193.183.98.66
 nameserver 91.239.100.100
 nameserver 89.233.43.71
-nameserver 77.109.138.45
-nameserver 77.109.139.29
+nameserver 185.95.218.42
+nameserver 185.95.218.43
 nameserver 85.214.20.141
 nameserver 204.152.184.76
 nameserver 194.150.168.168
