@@ -1,6 +1,6 @@
 # network
 
-Manage FreeBSD network connectivity using network.sh script.
+Manage FreeBSD network connectivity using **`network.sh`** script.
 
 ```
            ___                 ___              ___  
