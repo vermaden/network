@@ -35,6 +35,7 @@
 UNBOUND=0
 LAN_IF=em0
 LAN_RANDOM_MAC=0
+LAN_MAC_FROM_WLAN=1
 WLAN_IF=wlan0
 WLAN_PH=iwn0
 WLAN_RANDOM_MAC=0
@@ -65,7 +66,7 @@ then
   echo "  \  \  \ '__\  \_ \  \  \ \  \  \    \__\__  \ /  / "
   echo "   \__\__\__/ \___\______/____/\__\_/\_\_/____//__/  "
   echo
-  echo "network.sh 0.8 2023/09/11"
+  echo "network.sh 0.9 2024/09/18"
   echo
   exit 0
 fi
@@ -183,7 +184,7 @@ __bhyve_networking() {
     | sed 1d \
     | while read NAME TYPE IFACE ADDRESS PRIVATE MTU VLAN PORTS
       do
-        #DOAS# permit nopass :network as root cmd vm switch address
+        #DOAS# permit nopass :network as root cmd vm args switch address
         #SUDO# %network ALL = NOPASSWD: /usr/local/sbin/vm switch address *
              ${CMD} vm switch address ${NAME} ${ADDRESS} 1> /dev/null 2> /dev/null
         echo ${CMD} vm switch address ${NAME} ${ADDRESS}
@@ -208,7 +209,7 @@ __bhyve_networking() {
 }
 
 
-  # network_status() ------------------------------------------------------------
+# network_status() ------------------------------------------------------------
 __network_status() {
 
   local COL1='\033[38;05;1m'
@@ -313,6 +314,11 @@ __network_reset() {
   #SUDO# %network ALL = NOPASSWD: /etc/rc.d/netif onerestart
        ${CMD} /etc/rc.d/netif restart 1> /dev/null 2> /dev/null
   echo ${CMD} /etc/rc.d/netif restart
+
+  #DOAS# permit nopass :network as root cmd /etc/rc.d/routing args onerestart
+  #SUDO# %network ALL = NOPASSWD: /etc/rc.d/routing onerestart
+       ${CMD} /etc/rc.d/routing restart 1> /dev/null 2> /dev/null
+  echo ${CMD} /etc/rc.d/routing restart
 }
 
 # wwan_check() ----------------------------------------------------------------
@@ -605,6 +611,17 @@ case ${1} in
           #SUDO# %network ALL = NOPASSWD: /sbin/ifconfig *
           echo '__random_mac()'
           MAC=$( __random_mac )
+               ${CMD} ifconfig ${LAN_IF} ether ${MAC} 1> /dev/null 2> /dev/null
+          echo ${CMD} ifconfig ${LAN_IF} ether ${MAC}
+          unset MAC
+        fi
+
+        if [ "${LAN_MAC_FROM_WLAN}" = "1" ]
+        then
+          #DOAS# permit nopass :network as root cmd ifconfig
+          #SUDO# %network ALL = NOPASSWD: /sbin/ifconfig *
+          echo '__lan_mac_from_wlan()'
+          MAC=$( ifconfig wlan0 | awk '/ether/ {print $2}' )
                ${CMD} ifconfig ${LAN_IF} ether ${MAC} 1> /dev/null 2> /dev/null
           echo ${CMD} ifconfig ${LAN_IF} ether ${MAC}
           unset MAC
